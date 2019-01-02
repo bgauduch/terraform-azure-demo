@@ -1,3 +1,9 @@
+# shitty OSX
+.DS_Store
+
+# discard generated ssh keys
+ssh
+
 #  Local .terraform directories
 **/.terraform/*
 
@@ -7,3 +13,4 @@
 
 # .tfvars files
 *.tfvars
+
