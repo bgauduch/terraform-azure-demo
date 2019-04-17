@@ -5,7 +5,13 @@ resource "azurerm_public_ip" "demo2_public_ip" {
   name                         = "demo2_public_ip"
   location                     = "${data.azurerm_resource_group.demo1_rg.location}"
   resource_group_name          = "${data.azurerm_resource_group.demo1_rg.name}"
-  public_ip_address_allocation = "Static"
+  ip_version = "ipv4"
+  allocation_method = "Static"
+  domain_name_label = "demo2-public-ip-bga" # Must be unique worldwide!
+
+  tags {
+    environment = "${var.environment_tag}"
+  }
 }
 
 /**
@@ -21,6 +27,27 @@ resource "azurerm_network_interface" "demo2_nic" {
     subnet_id                     = "${data.azurerm_subnet.demo1_subnet.id}"
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = "${azurerm_public_ip.demo2_public_ip.id}"
+  }
+
+  tags {
+    environment = "${var.environment_tag}"
+  }
+}
+
+/**
+* Setup Cloudinit script
+**/
+data "template_file" "demo2_cloudinit_file" {
+  template = "${file("${var.cloudinit_script_path}")}"
+}
+
+data "template_cloudinit_config" "demo2_vm_cloudinit_script" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    content_type = "text/cloud-config"
+    content      = "${data.template_file.demo2_cloudinit_file.rendered}"
   }
 }
 
@@ -51,8 +78,9 @@ resource "azurerm_virtual_machine" "demo2_vm" {
   }
 
   os_profile {
-    computer_name  = "tf-iac-vm-demo2"
+    computer_name  = "demo2-vm"
     admin_username = "${var.user_name}"
+    custom_data          = "${data.template_cloudinit_config.demo2_vm_cloudinit_script.rendered}"
   }
 
   os_profile_linux_config {
@@ -64,20 +92,24 @@ resource "azurerm_virtual_machine" "demo2_vm" {
     }
   }
 
-  # the default connection config for provisioners
-  connection {
-    type        = "ssh"
-    user        = "${var.user_name}"
-    timeout     = "60s"
-    private_key = "${file("${path.module}/ssh/azure-vm-rsa")}"
-    host        = "${azurerm_public_ip.demo2_public_ip.ip_address}"
+  tags {
+    environment = "${var.environment_tag}"
   }
 
-  # execute remote commands
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "sudo apt install nginx -y",
-    ]
-  }
+  # # the default connection config for provisioners
+  # connection {
+  #   type        = "ssh"
+  #   user        = "${var.user_name}"
+  #   timeout     = "60s"
+  #   private_key = "${file("${path.module}/ssh/azure-vm-rsa")}"
+  #   host        = "${azurerm_public_ip.demo2_public_ip.ip_address}"
+  # }
+
+  # # execute remote commands
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo apt update",
+  #     "sudo apt install nginx -y",
+  #   ]
+  # }
 }
