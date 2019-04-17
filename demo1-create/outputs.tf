@@ -1,11 +1,9 @@
-output "public_ip" {
+### Show public IP address once task is completed
+output "public_ip_address" {
   value = "${azurerm_public_ip.demo1_public_ip.ip_address}"
 }
 
-output "vnet_id" {
-  value = "${azurerm_virtual_network.demo1_vnet.name}"
-}
-
-output "subnet_id" {
-  value = "${azurerm_subnet.demo1_subnet.id}"
+### Display public IP FQDN
+output "public_ip_fqdn" {
+  value = "${azurerm_public_ip.demo1_public_ip.fqdn}"
 }
