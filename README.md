@@ -3,6 +3,9 @@ Demos to introduce Terraform main features, based on Azure cloud.
 
 Knowledge on Azure IaaS resources is recommended.
 
+## Demo base: Terraform base concepts
+[See readme](/demo-base/readme.md)
+
 ## Demo 1: create resources
 [See readme](/demo1-create/readme.md)
 
