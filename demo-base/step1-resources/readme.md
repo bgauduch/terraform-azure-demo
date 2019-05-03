@@ -7,6 +7,7 @@ Create a simple resource (in this case a Resource Group) on Azure.
     - Terraform >= 0.12: https://www.terraform.io/docs/configuration/resources.html
     - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/resources.html
   - states: https://www.terraform.io/docs/state/index.html
+- Tutorial: https://learn.hashicorp.com/terraform/azure/configure_az#resources
 
 ## Goal
 Understand:

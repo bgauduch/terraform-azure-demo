@@ -12,7 +12,7 @@ Anatomy of a minimal Terraform configuration using the Azure Resource Manager (A
     - syntax: https://www.terraform.io/docs/configuration-0-11/syntax.html
     - providers: https://www.terraform.io/docs/configuration-0-11/providers.html
     - Terraform configuration: https://www.terraform.io/docs/configuration-0-11/terraform.html
-- Demo
+- Tutorial: https://learn.hashicorp.com/terraform/azure/configure_az#providers
 
 ## Goal
 Understand:

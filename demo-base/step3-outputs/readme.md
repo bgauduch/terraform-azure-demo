@@ -5,7 +5,7 @@ Expose created resources.
 - Documentation:
   - Terraform >= 0.12: https://www.terraform.io/docs/configuration/outputs.html
   - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/outputs.html
-- Demo: https://learn.hashicorp.com/terraform/getting-started/outputs
+- Tutorial: https://learn.hashicorp.com/terraform/azure/outputs_az
 
 ## Goal
 Understand :
