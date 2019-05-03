@@ -1,15 +1,17 @@
 # Base
-Minimal Terraform configuration to create a Resource Group on Azure using the Azure Resource Manager provider.
+Create a simple resource (in this case a Resource Group) on Azure.
 
-Here we have pinned the provider version, see [here](https://releases.hashicorp.com./terraform-provider-azurerm/) for available releases versions.
+## Resources
+- Documentation:
+  - resources:
+    - Terraform >= 0.12: https://www.terraform.io/docs/configuration/resources.html
+    - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/resources.html
+  - states: https://www.terraform.io/docs/state/index.html
 
 ## Goal
 Understand:
-- core layout of a terraform project
-- provider notion (and the underlaying plugins based architecture)
-- resource notion
-- CLI base usage
-- state management principles
+- resources creation
+- Terraform state management principles
 
 ## Setup
 Login to Azure:
@@ -31,6 +33,8 @@ terraform plan
 # Apply planned modifications
 terraform apply
 ```
+
+Check your Azure Portal to validate the Resource Group creation.
 
 Visualize current tfstate:
 ```bash

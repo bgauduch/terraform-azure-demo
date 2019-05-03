@@ -1,6 +1,12 @@
 # Variables
 Working with variables in a Terraform project.
 
+## Resources
+- Documentation:
+  - Terraform >= 0.12: https://www.terraform.io/docs/configuration/variables.html
+  - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/variables.html
+- Demo: https://learn.hashicorp.com/terraform/getting-started/variables
+
 ## Goal
 Understand :
 - usage of variables

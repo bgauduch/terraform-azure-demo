@@ -1,6 +1,12 @@
 # Using variables
 Expose created resources.
 
+## Resources
+- Documentation:
+  - Terraform >= 0.12: https://www.terraform.io/docs/configuration/outputs.html
+  - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/outputs.html
+- Demo: https://learn.hashicorp.com/terraform/getting-started/outputs
+
 ## Goal
 Understand :
 - usage of output
