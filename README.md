@@ -1,19 +1,25 @@
 # Terraform-demo
 Demos to introduce Terraform main features, based on Azure cloud.
 
-Knowledge on Azure IaaS resources is recommended.
+## Terraform base concepts
+Introduce basics of Terraform on Azure: [go to folder](/demo-terraform-101)
 
-## Demo base: Terraform base concepts
-[See readme](/demo-base/readme.md)
+## Demos
+Application on Azure, knowledge on Azure IaaS resources is recommended:
 
-## Demo 1: create resources
-[See readme](/demo1-create/readme.md)
+- [Demo 1](/demo1-create): create resources
+- [Demo 2](/demo2-add): add resources
+- [Demo 3](/demo3-modules): modules
+- [Demo 4](/demo4-multi-env): multi-environnement management
 
-## Demo 2: add resources
-[See readme](/demo2-add/readme.md)
+# Resources
 
-## Demo 3: modules
-[See readme](/demo3-modules/readme.md)
+## Documentation
+- Terraform > 0.12: https://www.terraform.io/docs/configuration/index.html
+- Terraform < 0.11: https://www.terraform.io/docs/configuration-0-11/index.html
 
-## Demo 4: multi-environnement management
-[See readme](/demo4-multi-env/readme.md)
+## Hands-on
+Learning Terraform on Azure: https://learn.hashicorp.com/terraform/azure/intro_az
+
+## Exemple
+AzureRM provider exemples: https://github.com/terraform-providers/terraform-provider-azurerm/tree/master/examples
