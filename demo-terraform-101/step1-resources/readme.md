@@ -26,7 +26,12 @@ Initialize your workspace once:
 terraform init
 ```
 
-## Usage
+## Usag
+Validate your configuration:
+```bash
+terraform validate
+```
+
 Plan & apply deployment (iterate if needed):
 ```bash
 # Plan the terraform deployment
