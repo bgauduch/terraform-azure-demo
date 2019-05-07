@@ -12,7 +12,7 @@ Understand :
 - usage of output
 
 ## Setup
-Login to Azure:
+If not done already, login to Azure:
 ```bash
 az login
 ```
@@ -24,12 +24,12 @@ terraform init
 ```
 
 ## Usage
-Apply deployment (ouputs will be displayed at the end):
+Apply deployment (ouputs will be displayed once completed):
 ```bash
 terraform apply
 ```
 
-Display outputs values after deployment:
+You can also display outputs values after deployment, using the Terraform state:
 ```bash
 terraform output
 ```

@@ -1,5 +1,5 @@
-# Functions
-Use datasources to retrieve existing resources and used there attributes in another deployment.
+# Datasources
+Use datasources to retrieve existing resources and exploit there attributes in another deployment.
 
 ## Resources
 - Documentation: 
@@ -11,7 +11,7 @@ Understand :
 - datasources
 
 ## Setup
-Login to Azure:
+If not done already, login to Azure:
 ```bash
 az login
 ```
@@ -23,18 +23,20 @@ cd retrieve && terraform init && cd ..
 ```
 
 ## Usage
-Deploy your project first :
+Apply the first deployment, simulating existing resources:
 ```bash
 cd deploy && terraform apply && cd ..
 ```
 
-Then, use the existing resources for your second project:
+Then note the way data are used in the `retrieve/main.tf` resource configuration file
+Use the existing resources for your second deployment:
 ```bash
+cd retrieve && terraform apply && cd ..
 ```
 
 ## Teardown
-Destroy resources when finished:
+Destroy resources when finished (in inverse order, to fulfill resources dependancies):
 ```bash
-cd deploy && terraform destroy && cd ..
 cd retrieve && terraform destroy && cd ..
+cd deploy && terraform destroy && cd ..
 ```

@@ -15,7 +15,7 @@ Understand :
 - resources dependancies & graph
 
 ## Setup
-Login to Azure:
+If not done already, login to Azure:
 ```bash
 az login
 ```
@@ -27,15 +27,21 @@ terraform init
 ```
 
 ## Usage
+Note the interpolation usage on the Virtual Network resource in the `main.tf` config file.
+
 Apply deployment:
 ```bash
 terraform apply
 ```
 
-Display the resource dependancy graph, You will need the `dot` binary:
+We use the `Dot` library from Graphviz, it should be installed and in your `$Path`.
+Build the resource dependancy graph image:
 ```bash
-terraform graph -type=plan| dot -Tpng > graph.png
+# pipe the generated DOT file from graph command to library for image generation
+terraform graph -type=plan | dot -Tpng > graph.png
 ```
+
+This is a very simple exemple, but it can be usefull in more complex senarios.
 
 ## Teardown
 Destroy resources when finished:

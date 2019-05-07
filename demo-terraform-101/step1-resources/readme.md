@@ -1,5 +1,6 @@
-# Base
-Create a simple resource (in this case a Resource Group) on Azure.
+# Resources
+Create a simple resource (in this case a [Resource Group](https://docs.microsoft.com/azure/azure-resource-manager/resource-group-overview#resource-groups)) on Azure.
+Here the Terraform and Provider configuration file is separated from the resources configuration file.
 
 ## Resources
 - Documentation:
@@ -11,11 +12,11 @@ Create a simple resource (in this case a Resource Group) on Azure.
 
 ## Goal
 Understand:
-- resources creation
+- resources configuration
 - Terraform state management principles
 
 ## Setup
-Login to Azure:
+If not done already, login to Azure:
 ```bash
 az login
 ```
@@ -32,9 +33,11 @@ Validate your configuration:
 terraform validate
 ```
 
-Plan & apply deployment (iterate if needed):
+Plan & apply deployment:
 ```bash
 # Plan the terraform deployment
+# This will compare the current state on Azure to the local (last known) terraform state
+# It will details planned actions to converge to desired state (our configuration)
 terraform plan
 # Apply planned modifications
 terraform apply
@@ -42,7 +45,7 @@ terraform apply
 
 Check your Azure Portal to validate the Resource Group creation.
 
-Visualize current tfstate:
+Visualize current Terraform state (last known "image" of your resources on Azure, from Terraform point of view):
 ```bash
 terraform show
 ```

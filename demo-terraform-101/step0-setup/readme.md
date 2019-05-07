@@ -1,4 +1,4 @@
-# Base
+# Base configuration
 Anatomy of a minimal Terraform configuration using the Azure Resource Manager (AzureRM) provider.
 
 ## Resources
@@ -16,13 +16,13 @@ Anatomy of a minimal Terraform configuration using the Azure Resource Manager (A
 
 ## Goal
 Understand:
-- core layout of a terraform project
+- flat layout of a terraform project
 - Terraform configuration
 - provider notion (and the underlaying plugins based architecture)
 - CLI base usage & workflow
 
 ## Setup
-Login to Azure:
+If not done already, login to Azure:
 ```bash
 az login
 ```
