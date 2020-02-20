@@ -2,9 +2,8 @@
 "Hashicorp Configuration Language" interpolations / expressions usage and resources dependancies.
 
 ## Resources
-- documentation:
-  - interpolation (Terraform <= 0.11): https://www.terraform.io/docs/configuration-0-11/interpolation.html
-  - expression (Terraform >= 0.12): https://www.terraform.io/docs/configuration/expressions.html#references-to-named-values
+- Documentation:
+  - Expressions: https://www.terraform.io/docs/configuration/expressions.html#references-to-named-values
   - CLI graph: https://www.terraform.io/docs/commands/graph.html
 - Tutorial: https://learn.hashicorp.com/terraform/azure/dependencies_az
 
@@ -12,7 +11,7 @@
 ## Goal
 Understand :
 - HCL interpolation
-- resources dependancies & graph
+- Resources dependancies & graph
 
 ## Setup
 If not done already, login to Azure:

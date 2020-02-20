@@ -4,9 +4,7 @@ Here the Terraform and Provider configuration file is separated from the resourc
 
 ## Resources
 - Documentation:
-  - resources:
-    - Terraform >= 0.12: https://www.terraform.io/docs/configuration/resources.html
-    - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/resources.html
+  - resources: https://www.terraform.io/docs/configuration/resources.html
   - states: https://www.terraform.io/docs/state/index.html
 - Tutorial: https://learn.hashicorp.com/terraform/azure/configure_az#resources
 
