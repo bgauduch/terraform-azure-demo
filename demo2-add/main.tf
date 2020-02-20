@@ -2,15 +2,15 @@
 * Public IP
 **/
 resource "azurerm_public_ip" "demo2_public_ip" {
-  name                         = "demo2_public_ip"
-  location                     = "${data.azurerm_resource_group.demo1_rg.location}"
-  resource_group_name          = "${data.azurerm_resource_group.demo1_rg.name}"
-  ip_version = "ipv4"
-  allocation_method = "Static"
-  domain_name_label = "demo2-public-ip-bga" # Must be unique worldwide!
+  name                = "demo2_public_ip"
+  location            = data.azurerm_resource_group.demo1_rg.location
+  resource_group_name = data.azurerm_resource_group.demo1_rg.name
+  ip_version          = "ipv4"
+  allocation_method   = "Static"
+  domain_name_label   = "demo2-public-ip-bga" # Must be unique worldwide!
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
 }
 
@@ -19,18 +19,18 @@ resource "azurerm_public_ip" "demo2_public_ip" {
 **/
 resource "azurerm_network_interface" "demo2_nic" {
   name                = "demo2_nic"
-  location            = "${data.azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${data.azurerm_resource_group.demo1_rg.name}"
+  location            = data.azurerm_resource_group.demo1_rg.location
+  resource_group_name = data.azurerm_resource_group.demo1_rg.name
 
   ip_configuration {
     name                          = "nic-ip-config"
-    subnet_id                     = "${data.azurerm_subnet.demo1_subnet.id}"
+    subnet_id                     = data.azurerm_subnet.demo1_subnet.id
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.demo2_public_ip.id}"
+    public_ip_address_id          = azurerm_public_ip.demo2_public_ip.id
   }
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
 }
 
@@ -38,7 +38,7 @@ resource "azurerm_network_interface" "demo2_nic" {
 * Setup Cloudinit script
 **/
 data "template_file" "demo2_cloudinit_file" {
-  template = "${file("${var.cloudinit_script_path}")}"
+  template = file(var.cloudinit_script_path)
 }
 
 data "template_cloudinit_config" "demo2_vm_cloudinit_script" {
@@ -47,7 +47,7 @@ data "template_cloudinit_config" "demo2_vm_cloudinit_script" {
 
   part {
     content_type = "text/cloud-config"
-    content      = "${data.template_file.demo2_cloudinit_file.rendered}"
+    content      = data.template_file.demo2_cloudinit_file.rendered
   }
 }
 
@@ -56,17 +56,17 @@ data "template_cloudinit_config" "demo2_vm_cloudinit_script" {
 **/
 resource "azurerm_virtual_machine" "demo2_vm" {
   name                = "demo2_vm"
-  location            = "${data.azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${data.azurerm_resource_group.demo1_rg.name}"
+  location            = data.azurerm_resource_group.demo1_rg.location
+  resource_group_name = data.azurerm_resource_group.demo1_rg.name
 
-  network_interface_ids         = ["${azurerm_network_interface.demo2_nic.id}"]
-  vm_size                       = "${var.vm_size}"
+  network_interface_ids         = [azurerm_network_interface.demo2_nic.id]
+  vm_size                       = var.vm_size
   delete_os_disk_on_termination = true
 
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "${var.ubuntu_version}"
+    sku       = var.ubuntu_version
     version   = "latest"
   }
 
@@ -79,8 +79,8 @@ resource "azurerm_virtual_machine" "demo2_vm" {
 
   os_profile {
     computer_name  = "demo2-vm"
-    admin_username = "${var.user_name}"
-    custom_data          = "${data.template_cloudinit_config.demo2_vm_cloudinit_script.rendered}"
+    admin_username = var.user_name
+    custom_data    = data.template_cloudinit_config.demo2_vm_cloudinit_script.rendered
   }
 
   os_profile_linux_config {
@@ -88,14 +88,13 @@ resource "azurerm_virtual_machine" "demo2_vm" {
 
     ssh_keys {
       path     = "/home/${var.user_name}/.ssh/authorized_keys"
-      key_data = "${file("${path.module}/ssh/azure-vm-rsa.pub")}"
+      key_data = file("${path.module}/ssh/azure-vm-rsa.pub")
     }
   }
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
-
   # # the default connection config for provisioners
   # connection {
   #   type        = "ssh"
@@ -113,3 +112,4 @@ resource "azurerm_virtual_machine" "demo2_vm" {
   #   ]
   # }
 }
+
