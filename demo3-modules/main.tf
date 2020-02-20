@@ -3,10 +3,10 @@
 */
 resource "azurerm_resource_group" "demo3_rg" {
   name     = "${var.resource_group_name}-${var.env}"
-  location = "${var.azure_region}"
+  location = var.azure_region
 
-  tags {
-    environment = "${var.env}"
+  tags = {
+    environment = var.env
   }
 }
 
@@ -16,10 +16,10 @@ resource "azurerm_resource_group" "demo3_rg" {
 module "network_module" {
   source = "./modules/network-module"
 
-  env                 = "${var.env}"
-  resource_group_name = "${azurerm_resource_group.demo3_rg.name}"
-  location            = "${azurerm_resource_group.demo3_rg.location}"
-  vnet_range          = "${var.vnet_range}"
+  env                 = var.env
+  resource_group_name = azurerm_resource_group.demo3_rg.name
+  location            = azurerm_resource_group.demo3_rg.location
+  vnet_range          = var.vnet_range
 }
 
 /*
@@ -28,14 +28,15 @@ module "network_module" {
 module "vm_module" {
   source = "./modules/vm-module"
 
-  env                  = "${var.env}"
-  resource_group_name  = "${azurerm_resource_group.demo3_rg.name}"
-  location             = "${azurerm_resource_group.demo3_rg.location}"
-  subnet_id            = "${module.network_module.subnet_id}"
-  public_ip_fqdn_prefix       = "demo3-public-ip-bga"
-  ubuntu_version       = "${var.ubuntu_version}"
-  user_name            = "${var.user_name}"
-  vm_size              = "${var.vm_size}"
-  ssh_key_private_path = "${file("${path.module}/ssh/azure-vm-rsa")}"
-  ssh_key_public_path  = "${file("${path.module}/ssh/azure-vm-rsa.pub")}"
+  env                   = var.env
+  resource_group_name   = azurerm_resource_group.demo3_rg.name
+  location              = azurerm_resource_group.demo3_rg.location
+  subnet_id             = module.network_module.subnet_id
+  public_ip_fqdn_prefix = "demo3-public-ip-bga"
+  ubuntu_version        = var.ubuntu_version
+  user_name             = var.user_name
+  vm_size               = var.vm_size
+  ssh_key_private_path  = file("${path.module}/ssh/azure-vm-rsa")
+  ssh_key_public_path   = file("${path.module}/ssh/azure-vm-rsa.pub")
 }
+

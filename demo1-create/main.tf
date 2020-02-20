@@ -1,17 +1,17 @@
 ### Resource Group
 resource "azurerm_resource_group" "demo1_rg" {
-  name     = "${var.resource_group_name}"
-  location = "${var.azure_region}"
-  tags {
-    environment = "${var.environment_tag}"
-  } 
+  name     = var.resource_group_name
+  location = var.azure_region
+  tags = {
+    environment = var.environment_tag
+  }
 }
 
 ### Create the subnet NSG
 resource "azurerm_network_security_group" "demo1_nsg" {
   name                = "demo1_nsg"
-  location            = "${azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${azurerm_resource_group.demo1_rg.name}"
+  location            = azurerm_resource_group.demo1_rg.location
+  resource_group_name = azurerm_resource_group.demo1_rg.name
 }
 
 ### Add a rule to the NSG: allow HTTP in
@@ -25,73 +25,73 @@ resource "azurerm_network_security_rule" "demo1_nsg_rule_http_allow" {
   destination_port_range      = "80"
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
-  resource_group_name         = "${azurerm_resource_group.demo1_rg.name}"
-  network_security_group_name = "${azurerm_network_security_group.demo1_nsg.name}"
+  resource_group_name         = azurerm_resource_group.demo1_rg.name
+  network_security_group_name = azurerm_network_security_group.demo1_nsg.name
 }
 
 ### vNET
 resource "azurerm_virtual_network" "demo1_vnet" {
   name                = "demo1_vnet"
-  location            = "${azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${azurerm_resource_group.demo1_rg.name}"     # link on resource attribut for dependancy handling
+  location            = azurerm_resource_group.demo1_rg.location
+  resource_group_name = azurerm_resource_group.demo1_rg.name # link on resource attribut for dependancy handling
 
-  address_space = ["${var.vnet_range}"]
+  address_space = [var.vnet_range]
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
 }
 
 ### Subnet
 resource "azurerm_subnet" "demo1_subnet" {
   name                 = "demo1_subnet"
-  resource_group_name  = "${azurerm_resource_group.demo1_rg.name}"
-  virtual_network_name = "${azurerm_virtual_network.demo1_vnet.name}"
+  resource_group_name  = azurerm_resource_group.demo1_rg.name
+  virtual_network_name = azurerm_virtual_network.demo1_vnet.name
 
-  address_prefix = "${cidrsubnet(var.vnet_range, 8, 1)}"
+  address_prefix = cidrsubnet(var.vnet_range, 8, 1)
 }
 
 ### Bind the NSG to the subnet
 resource "azurerm_subnet_network_security_group_association" "demo1_subnet_nsg_bind" {
-  subnet_id                 = "${azurerm_subnet.demo1_subnet.id}"
-  network_security_group_id = "${azurerm_network_security_group.demo1_nsg.id}"
+  subnet_id                 = azurerm_subnet.demo1_subnet.id
+  network_security_group_id = azurerm_network_security_group.demo1_nsg.id
 }
 
 ### Public IP
 resource "azurerm_public_ip" "demo1_public_ip" {
-  name                         = "demo1_public_ip_test"
-  location                     = "${azurerm_resource_group.demo1_rg.location}"
-  resource_group_name          = "${azurerm_resource_group.demo1_rg.name}"
-  ip_version = "ipv4"
-  allocation_method = "Static"
-  domain_name_label = "demo1-public-ip-bga" # Must be unique worldwide!
+  name                = "demo1_public_ip_test"
+  location            = azurerm_resource_group.demo1_rg.location
+  resource_group_name = azurerm_resource_group.demo1_rg.name
+  ip_version          = "ipv4"
+  allocation_method   = "Static"
+  domain_name_label   = "demo1-public-ip-bga" # Must be unique worldwide!
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
 }
 
 ### NIC
 resource "azurerm_network_interface" "demo1_nic" {
   name                = "demo1_nic"
-  location            = "${azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${azurerm_resource_group.demo1_rg.name}"
+  location            = azurerm_resource_group.demo1_rg.location
+  resource_group_name = azurerm_resource_group.demo1_rg.name
 
   ip_configuration {
     name                          = "nic-ip-config"
-    subnet_id                     = "${azurerm_subnet.demo1_subnet.id}"
+    subnet_id                     = azurerm_subnet.demo1_subnet.id
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.demo1_public_ip.id}"
+    public_ip_address_id          = azurerm_public_ip.demo1_public_ip.id
   }
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
 }
 
 ### Setup Cloudinit script
 data "template_file" "demo1_cloudinit_file" {
-  template = "${file("${var.cloudinit_script_path}")}"
+  template = file(var.cloudinit_script_path)
 }
 
 data "template_cloudinit_config" "demo1_vm_cloudinit_script" {
@@ -100,24 +100,24 @@ data "template_cloudinit_config" "demo1_vm_cloudinit_script" {
 
   part {
     content_type = "text/cloud-config"
-    content      = "${data.template_file.demo1_cloudinit_file.rendered}"
+    content      = data.template_file.demo1_cloudinit_file.rendered
   }
 }
 
 ### VM
 resource "azurerm_virtual_machine" "demo1_vm" {
   name                = "demo1_vm"
-  location            = "${azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${azurerm_resource_group.demo1_rg.name}"
+  location            = azurerm_resource_group.demo1_rg.location
+  resource_group_name = azurerm_resource_group.demo1_rg.name
 
-  network_interface_ids         = ["${azurerm_network_interface.demo1_nic.id}"]
-  vm_size                       = "${var.vm_size}"
+  network_interface_ids         = [azurerm_network_interface.demo1_nic.id]
+  vm_size                       = var.vm_size
   delete_os_disk_on_termination = true
 
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "${var.ubuntu_version}"
+    sku       = var.ubuntu_version
     version   = "latest"
   }
 
@@ -130,8 +130,8 @@ resource "azurerm_virtual_machine" "demo1_vm" {
 
   os_profile {
     computer_name  = "demo1-vm"
-    admin_username = "${var.user_name}"
-    custom_data          = "${data.template_cloudinit_config.demo1_vm_cloudinit_script.rendered}"
+    admin_username = var.user_name
+    custom_data    = data.template_cloudinit_config.demo1_vm_cloudinit_script.rendered
   }
 
   os_profile_linux_config {
@@ -139,7 +139,7 @@ resource "azurerm_virtual_machine" "demo1_vm" {
 
     ssh_keys {
       path     = "/home/${var.user_name}/.ssh/authorized_keys"
-      key_data = "${file("${path.module}/ssh/azure-vm-rsa.pub")}"
+      key_data = file("${path.module}/ssh/azure-vm-rsa.pub")
     }
   }
 
@@ -160,7 +160,8 @@ resource "azurerm_virtual_machine" "demo1_vm" {
   #   ]
   # }
 
-  tags {
-    environment = "${var.environment_tag}"
+  tags = {
+    environment = var.environment_tag
   }
 }
+
