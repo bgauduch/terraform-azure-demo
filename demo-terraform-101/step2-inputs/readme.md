@@ -3,8 +3,7 @@ Working with variables as configuration inputs in a Terraform project.
 
 ## Resources
 - Documentation:
-  - Terraform >= 0.12: https://www.terraform.io/docs/configuration/variables.html
-  - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/variables.html
+  - Variables: https://www.terraform.io/docs/configuration/variables.html
 - Tutorial: https://learn.hashicorp.com/terraform/azure/variables_az
 
 ## Goal

@@ -3,12 +3,11 @@ Use datasources to retrieve existing resources and exploit there attributes in a
 
 ## Resources
 - Documentation: 
-  - Terraform >= 0.12: https://www.terraform.io/docs/configuration/data-sources.html
-  - Terraform <= 0.11: https://www.terraform.io/docs/configuration-0-11/data-sources.html
+  - Data-sources: https://www.terraform.io/docs/configuration/data-sources.html
 
 ## Goal
 Understand :
-- datasources
+- Datasources
 
 ## Setup
 If not done already, login to Azure:
