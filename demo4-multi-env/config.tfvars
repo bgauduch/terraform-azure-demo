@@ -1,0 +1,6 @@
+azure_region="West Europe"
+resource_group_name="terraform-iac"
+vnet_range="10.0.0.0/16"
+ubuntu_version="18.04-LTS"
+user_name="azureuser"
+vm_size="Standard_A1_v2"

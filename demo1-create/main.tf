@@ -2,19 +2,42 @@
 resource "azurerm_resource_group" "demo1_rg" {
   name     = "${var.resource_group_name}"
   location = "${var.azure_region}"
+  
   tags {
     environment = "${var.environment_tag}"
   } 
 }
 
-### Create the subnet NSG
+### Create our project Virtual Network (vNET)
+resource "azurerm_virtual_network" "demo1_vnet" {
+  name                = "demo1_vnet"
+  location            = "${azurerm_resource_group.demo1_rg.location}"
+  resource_group_name = "${azurerm_resource_group.demo1_rg.name}"
+
+  address_space = ["${var.vnet_range}"]
+
+  tags {
+    environment = "${var.environment_tag}"
+  }
+}
+
+### Create one Subnet to deploy the VM
+resource "azurerm_subnet" "demo1_subnet" {
+  name                 = "demo1_subnet"
+  resource_group_name  = "${azurerm_resource_group.demo1_rg.name}"
+  virtual_network_name = "${azurerm_virtual_network.demo1_vnet.name}"
+
+  address_prefix = "${cidrsubnet(var.vnet_range, 8, 1)}"
+}
+
+### Create the subnet NSG (Network Security Group)
 resource "azurerm_network_security_group" "demo1_nsg" {
   name                = "demo1_nsg"
   location            = "${azurerm_resource_group.demo1_rg.location}"
   resource_group_name = "${azurerm_resource_group.demo1_rg.name}"
 }
 
-### Add a rule to the NSG: allow HTTP in
+### Add a security rule to the NSG: allow HTTP in
 resource "azurerm_network_security_rule" "demo1_nsg_rule_http_allow" {
   name                        = "demo1_nsg_rule_http_allow"
   priority                    = 100
@@ -29,35 +52,13 @@ resource "azurerm_network_security_rule" "demo1_nsg_rule_http_allow" {
   network_security_group_name = "${azurerm_network_security_group.demo1_nsg.name}"
 }
 
-### vNET
-resource "azurerm_virtual_network" "demo1_vnet" {
-  name                = "demo1_vnet"
-  location            = "${azurerm_resource_group.demo1_rg.location}"
-  resource_group_name = "${azurerm_resource_group.demo1_rg.name}"     # link on resource attribut for dependancy handling
-
-  address_space = ["${var.vnet_range}"]
-
-  tags {
-    environment = "${var.environment_tag}"
-  }
-}
-
-### Subnet
-resource "azurerm_subnet" "demo1_subnet" {
-  name                 = "demo1_subnet"
-  resource_group_name  = "${azurerm_resource_group.demo1_rg.name}"
-  virtual_network_name = "${azurerm_virtual_network.demo1_vnet.name}"
-
-  address_prefix = "${cidrsubnet(var.vnet_range, 8, 1)}"
-}
-
 ### Bind the NSG to the subnet
 resource "azurerm_subnet_network_security_group_association" "demo1_subnet_nsg_bind" {
   subnet_id                 = "${azurerm_subnet.demo1_subnet.id}"
   network_security_group_id = "${azurerm_network_security_group.demo1_nsg.id}"
 }
 
-### Public IP
+### Create the VM Public IP
 resource "azurerm_public_ip" "demo1_public_ip" {
   name                         = "demo1_public_ip_test"
   location                     = "${azurerm_resource_group.demo1_rg.location}"
@@ -71,7 +72,7 @@ resource "azurerm_public_ip" "demo1_public_ip" {
   }
 }
 
-### NIC
+### Create the VM Network Interface (NIC)
 resource "azurerm_network_interface" "demo1_nic" {
   name                = "demo1_nic"
   location            = "${azurerm_resource_group.demo1_rg.location}"
@@ -142,24 +143,7 @@ resource "azurerm_virtual_machine" "demo1_vm" {
       key_data = "${file("${path.module}/ssh/azure-vm-rsa.pub")}"
     }
   }
-
-  # # the default connection config for provisioners
-  # connection {
-  #   type        = "ssh"
-  #   user        = "${var.user_name}"
-  #   timeout     = "60s"
-  #   private_key = "${file("${path.module}/ssh/azure-vm-rsa")}"
-  #   host        = "${azurerm_public_ip.demo1_public_ip.ip_address}"
-  # }
-
-  # # execute remote commands
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo apt update",
-  #     "sudo apt install nginx -y",
-  #   ]
-  # }
-
+  
   tags {
     environment = "${var.environment_tag}"
   }

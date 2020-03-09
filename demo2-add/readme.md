@@ -7,7 +7,7 @@ Generate ssh keypair:
 ./tools/ssh-key-gen.sh
 ```
 
-Login to azure:
+If not done already, login to azure:
 ```bash
 az login
 ```
@@ -18,8 +18,9 @@ Initialize your workspace once:
 terraform init
 ```
 
-You need resources from demo1, so follow [demo1 setup](/demo1/readme.md).
+You need resources from demo1, so follow [demo1 setup](/demo1-create).
 
+## Usage
 Plan & apply deployment (iterate if needed):
 ```bash
 # Plan the terraform deployment
@@ -28,6 +29,7 @@ terraform plan
 terraform apply
 ```
 
+## Teardown
 Destroy resources when finished:
 ```bash
 terraform destroy

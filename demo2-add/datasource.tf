@@ -1,5 +1,4 @@
-# fetch existing resource from name (easier than ids)
-# ability to filter them with tags
+# fetch existing resources from name
 
 data "azurerm_resource_group" "demo1_rg" {
   name = "${var.resource_group_name}"

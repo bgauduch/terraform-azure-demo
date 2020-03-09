@@ -1,6 +1,4 @@
-/**
-* Public IP
-**/
+### Public IP
 resource "azurerm_public_ip" "demo2_public_ip" {
   name                         = "demo2_public_ip"
   location                     = "${data.azurerm_resource_group.demo1_rg.location}"
@@ -14,9 +12,7 @@ resource "azurerm_public_ip" "demo2_public_ip" {
   }
 }
 
-/**
-* NIC
-**/
+### NIC
 resource "azurerm_network_interface" "demo2_nic" {
   name                = "demo2_nic"
   location            = "${data.azurerm_resource_group.demo1_rg.location}"
@@ -34,9 +30,7 @@ resource "azurerm_network_interface" "demo2_nic" {
   }
 }
 
-/**
-* Setup Cloudinit script
-**/
+### Setup Cloudinit script
 data "template_file" "demo2_cloudinit_file" {
   template = "${file("${var.cloudinit_script_path}")}"
 }
@@ -51,9 +45,7 @@ data "template_cloudinit_config" "demo2_vm_cloudinit_script" {
   }
 }
 
-/**
-* VM
-**/
+### VM
 resource "azurerm_virtual_machine" "demo2_vm" {
   name                = "demo2_vm"
   location            = "${data.azurerm_resource_group.demo1_rg.location}"
@@ -96,20 +88,4 @@ resource "azurerm_virtual_machine" "demo2_vm" {
     environment = "${var.environment_tag}"
   }
 
-  # # the default connection config for provisioners
-  # connection {
-  #   type        = "ssh"
-  #   user        = "${var.user_name}"
-  #   timeout     = "60s"
-  #   private_key = "${file("${path.module}/ssh/azure-vm-rsa")}"
-  #   host        = "${azurerm_public_ip.demo2_public_ip.ip_address}"
-  # }
-
-  # # execute remote commands
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo apt update",
-  #     "sudo apt install nginx -y",
-  #   ]
-  # }
 }

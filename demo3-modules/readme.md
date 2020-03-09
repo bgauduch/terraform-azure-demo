@@ -1,5 +1,12 @@
 # Demo 3
 Use modules to deploy your resources.
+In fact, you have been using modules since the bigning : the `root module`, base of any terraform configuration.
+
+## Resources
+Documentation:
+- Terraform >= 0.12: https://www.terraform.io/docs/configuration/modules.html
+- Terraform <= 0.22: https://www.terraform.io/docs/configuration-0-11/modules.html
+
 
 ## Setup
 Generate ssh keypair:
@@ -7,7 +14,7 @@ Generate ssh keypair:
 ./tools/ssh-key-gen.sh
 ```
 
-Login to azure:
+If not done already, login to azure:
 ```bash
 az login
 ```
